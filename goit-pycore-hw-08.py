@@ -143,7 +143,9 @@ def add_contact(args, book: AddressBook):
         book.add_record(record)
         message = "Contact added."
     if phone:
+        book.pop(name)
         record.add_phone(phone)
+        book.add_record(record)
     return message
 
 @input_error
@@ -154,24 +156,37 @@ def all (args):
     return '\n'.join(contacts)
 
 @input_error
-def change_nummer( name, old_nummer, new_nummer):
+def change_nummer(book, name, old_nummer, new_nummer):
     for el in Record.list_of_objects:
         if el['name'].value == name and old_nummer in el["phones"]:
             el["phones"][el["phones"].index(old_nummer)] = new_nummer
+            with open("recordslist.pkl", "wb") as file:
+                pickle.dump(Record.list_of_objects, file)
+    for el in book:
+        if el == name:
+            for i in book[name]:
+                if i == old_nummer:
+                    book[name][book[name].index(i)] = new_nummer
             return 'Contact changed'
 
 @input_error
-def phone (user):
-    for el in Record.list_of_objects:
-        if el["name"].value == user:
-            return el["phones"] 
+def phone(book, user):
+    for el in book:
+        if el == user:
+            return book.get(el)
 
 @input_error  
-def add_birthday(args, book):
+def add_birthday_to_user(args, book):
     name, birthday, *_ = args
     user = book.find(name)
-    user.add_birthday(birthday)
-    return "Birthday added."
+    for el in Record.list_of_objects:
+        if el["name"].value == name and el["birthday"] is not None:
+            return "This contact already has birthday date"
+        else:
+            continue
+    else:
+        user.add_birthday(birthday)
+        return "Birthday added."
 
 @input_error
 def show_birthday(args):
@@ -218,11 +233,11 @@ def main():
         elif command == "all":
             print(all(book.items()))
         elif command == "change":
-            print(change_nummer(*args))
+            print(change_nummer(book, *args))
         elif command == 'phone':
-            print(phone(args[0]))
+            print(phone(book, args[0]))
         elif command == "add-birthday":
-            print(add_birthday(args, book))
+            print(add_birthday_to_user(args, book))
         elif command == "show-birthday":
             print(show_birthday(args))
         elif command == "birthdays":
