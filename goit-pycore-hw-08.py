@@ -18,7 +18,7 @@ class Name(Field):
 class Phone(Field):
 	def __init__(self, value):
             super().__init__(value)
-            if 10 != len(value) or isinstance(int(value), int):
+            if 10 != len(value) or not isinstance(int(value), int):
                 raise ValueError("Phone has incorrect format")
             
 
