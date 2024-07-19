@@ -90,6 +90,7 @@ class AddressBook(UserDict):
                     contact.add_birthday(datetime.strftime(i.get("birthday"), "%d.%m.%Y"))  
                  else:
                     continue
+            self.data.update({contact.name.value : contact.phones}) 
             return contact
         else:
             return None
@@ -144,7 +145,6 @@ def add_contact(args, book: AddressBook):
         message = "Contact added."
     if phone:
         record.add_phone(phone)
-        book.add_record(record)
     return message
 
 @input_error
