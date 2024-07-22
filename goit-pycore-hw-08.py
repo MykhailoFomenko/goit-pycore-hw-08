@@ -18,7 +18,7 @@ class Name(Field):
 class Phone(Field):
 	def __init__(self, value):
             super().__init__(value)
-            if 10 != len(value) or not isinstance(int(value), int):
+            if 10 != len(value) or not value.isdigit():
                 raise ValueError("Phone has incorrect format")
             
 
@@ -53,7 +53,7 @@ class Record:
          self.phones.remove(phone)
     
     def edit_phone(self, old_number, new_number):
-          if old_number not in self.phones or len(new_number) != 10 or not isinstance(int(old_number), int) or not isinstance(int(new_number), int):
+          if old_number not in self.phones or len(new_number) != 10 or not old_number.isdigit() or not new_number.isdigit():
             raise ValueError("One of phones or both of them have incorrect format")
           else:
             self.phones[self.phones.index(old_number)] = new_number
@@ -156,7 +156,7 @@ def all (book):
 
 @input_error
 def change_nummer(book, name, old_nummer, new_nummer):
-    if len(old_nummer) != 10 or len(new_nummer) != 10 or not isinstance(int(old_nummer), int) or not isinstance(int(new_nummer), int):
+    if len(old_nummer) != 10 or len(new_nummer) != 10 or not old_nummer.isdigit() or not new_nummer.isdigit():
         raise ValueError("One of phones or both of them have incorrect format")
     else:
         for el in Record.list_of_objects:
