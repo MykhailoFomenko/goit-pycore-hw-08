@@ -156,20 +156,9 @@ def all (book):
 
 @input_error
 def change_nummer(book, name, old_nummer, new_nummer):
-    if len(old_nummer) != 10 or len(new_nummer) != 10 or not old_nummer.isdigit() or not new_nummer.isdigit():
-        raise ValueError("One of phones or both of them have incorrect format")
-    else:
-        for el in Record.list_of_objects:
-            if el['name'].value == name and old_nummer in el["phones"]:
-                el["phones"][el["phones"].index(old_nummer)] = new_nummer
-                with open("recordslist.pkl", "wb") as file:
-                    pickle.dump(Record.list_of_objects, file)
-        for el in book:
-            if el == name:
-                for i in book[name]:
-                    if i == old_nummer:
-                        book[name][book[name].index(i)] = new_nummer
-                return 'Contact changed'
+    user = book.find(name)
+    user.edit_phone(old_nummer, new_nummer)
+    return 'Contact changed'
 
 @input_error
 def phone(book, user):
